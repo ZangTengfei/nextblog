@@ -1,0 +1,149 @@
+import { zangtengfei } from '@/authors'
+
+export const meta = {
+  title: 'N1 盒子刷 openWrt 做旁路网关',
+  description: `拼多多买来的 N1 盒子已经刷入了 Armbian 系统，不想玩 Armbian后准备刷入 openWrt 当旁路网关使用，方便在电视上看 Netflix。其实 N1 也可以设置成主路由，但是家里还放了一个群晖并开启了公网 IP，稳定是第一位的。况且我只想给特定的设备开启软路由插件功能，N1 又是百兆单网口，也就堪堪做一个旁路网关来用，真正想用软路由作为主路由，肯定要用一个千兆双网口的设备才行。`,
+  date: '2021-02-04T18:55:18.391Z',
+  authors: [zangtengfei],
+}
+
+<!--excerpt-->
+
+拼多多买来的 N1 盒子已经刷入了 Armbian 系统，不想玩 Armbian后准备刷入 openWrt 当旁路网关使用，方便在电视上看 Netflix。
+
+其实 N1 也可以设置成主路由，但是家里还放了一个群晖并开启了公网 IP，稳定是第一位的。况且我只想给特定的设备开启软路由插件功能，N1 又是百兆单网口，也就堪堪做一个旁路网关来用，真正想用软路由作为主路由，肯定要用一个千兆双网口的设备才行。
+
+<!--/excerpt-->
+
+拼多多买来的 N1 盒子已经刷入了 Armbian 系统，不想玩 Armbian后准备刷入 openWrt 当旁路网关使用，方便在电视上看 Netflix。
+
+其实 N1 也可以设置成主路由，但是家里还放了一个群晖并开启了公网 IP，稳定是第一位的。况且我只想给特定的设备开启软路由插件功能，N1 又是百兆单网口，也就堪堪做一个旁路网关来用，真正想用软路由作为主路由，肯定要用一个千兆双网口的设备才行。
+
+准备：
+- N1 盒子
+- USB 2.0 优盘
+
+## 下载固件
+
+第一步先下载固件，找了个 Google Drive 的资源。
+
+## 烧录固件
+
+我使用的是 mac 系统，直接用命令行烧录很方便。
+
+### 查看磁盘列表
+```shell
+diskutil list
+```
+找到优盘的路径，一般第一个是系统盘。（谨慎操作）
+
+### 取消磁盘挂载
+```shell
+diskutil unmountDisk /dev/disk2
+```
+烧录前必须先取消挂载，注意选正确的磁盘路径。
+
+### 开始烧录
+```shell
+sudo dd if=xxx.iso of=/dev/disk2 bs=1m
+```
+if=后面的是iso文件的路径；of=后面的是磁盘路径；bs为每次烧录文件块大小
+
+### 弹出磁盘
+```shell
+diskutil eject /dev/disk2
+```
+因为取消挂载了，所以无法通过访达去弹出，通过上面的命令弹出。
+
+```jsx
+import dayjs from 'dayjs'
+import Link from 'next/link'
+import Head from 'next/head'
+import getAllPostPreviews from '@/getAllPostPreviews'
+
+const posts = getAllPostPreviews()
+
+const postDateTemplate = (t) => dayjs(t).format('YYYY-MM-DD')
+
+export default function Home() {
+  return (
+    <div className="divide-y divide-gray-200">
+      <Head>
+        <title>臧腾飞的博客</title>
+        <meta name="description" content="热爱生活" />
+      </Head>
+
+      <ul className="divide-y divide-gray-200">
+        {posts.map(({ link, module: { default: Component, meta } }) => {
+          return (
+            <li key={link} className="py-12">
+              <article className="space-y-2 xl:grid xl:grid-cols-4 xl:space-y-0 xl:items-baseline">
+                <dl>
+                  <dt className="sr-only">Published on</dt>
+                  <dd className="text-base leading-6 font-medium text-gray-500">
+                    <time dateTime={meta.date}>{postDateTemplate(new Date(meta.date))}</time>
+                  </dd>
+                </dl>
+                <div className="space-y-5 xl:col-span-3">
+                  <div className="space-y-6">
+                    <h2 className="text-2xl leading-8 font-bold tracking-tight">
+                      <Link href={link}>
+                        <a className="text-gray-900">{meta.title}</a>
+                      </Link>
+                    </h2>
+                    <div className="prose max-w-none text-gray-500">
+                      <Component />
+                    </div>
+                  </div>
+                  <div className="text-base leading-6 font-medium">
+                    <Link href={link}>
+                      <a
+                        className="text-red-500 hover:text-red-600"
+                        aria-label={`Read "${meta.title}"`}
+                      >
+                        阅读全文 &rarr;
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+```
+
+## 基础设置
+### 启动 N1
+在不插网线的情况下，把烧录好的优盘插到靠近 N1 电源的 USB 口，上电启动。不出意外大约一分钟后能搜到一个名为 **openWrt** 的 WiFi 信号，连上它。
+
+### 进入系统
+之后在浏览器里输入 `192.168.123.2` 就能进入 openWrt 的系统管理页面。默认的登录账号是 `root`，密码 `password`。
+
+### 更改 SSID
+设置旁路网关之前，最好先改一下设备的 WiFi 名，然后设置一个密码。具体操作在 **接口 – 无线** 菜单下完成。
+
+### 刷入 EMMC
+登陆 OpenWrt 管理后台，依次来到  **系统—TTYD终端（网页终端）** ，看到 `OpenWrt login:` 输入 `root` 敲回车，在 `Password:` 输入 `password` 敲回车。
+
+看到 `root@N1:~#` 输入执行写入EMMC 脚本命令：`./install.sh` 敲回车，按提示操作。
+
+操作完成之后就可以拔掉电源，拔掉优盘重新上电了。
+
+### 设置旁路网关
+**网络 – 接口 – lan – 修改**，主要需要修改基本设置和DHCP服务器。
+
+基本设置：协议选静态地址，IPv4地址填和主路由一个局域网的IP就行。如主路由是 `192.168.1.1`，这里就可以填 `192.168.1.2`。网关填写主路由的IP地址。
+DHCP服务器：我这里是关掉旁路由上的DHCP交给主路由负责了，所有这里勾选忽略此接口。
+后面保存&应用就算配置完成了。按这种配置以我上面的分类是以非全局的模式运行的，这个时候可以先试试将设备的网关地址设为旁路由的IP看看是否能正常上网，后面再根据自己的需要选择全局或者非全局。
+
+## 参考
+[N1盒子 Openwrt 固件,支持写入EMMC！](https://www.right.com.cn/forum/thread-3160780-1-1.html)
+
+[MAC OS 烧录ISO文件到U盘](https://blog.csdn.net/Aria_Miazzy/article/details/104321607)
+
+[【韩风Talk】N1刷路由Openwrt：写入EMMC，设置WIFI、主旁路由全涵盖，成了！](https://www.bilibili.com/video/BV1vJ411W7nf?t=1059)

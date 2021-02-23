@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import PageTitle from '@/components/PageTitle'
-import tinytime from 'tinytime'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { MDXProvider } from '@mdx-js/react'
@@ -14,7 +14,7 @@ export const mdxComponents = {
   ),
 }
 
-const postDateTemplate = tinytime('{dddd}, {MMMM} {DD}, {YYYY}')
+const postDateTemplate = (t) => dayjs(t).format('YYYY-MM-DD HH:mm')
 
 export default function Post({ meta, children, posts }) {
   const router = useRouter()
@@ -25,18 +25,7 @@ export default function Post({ meta, children, posts }) {
   return (
     <article className="xl:divide-y xl:divide-gray-200">
       <Head>
-        <title>{meta.title} – Tailwind CSS</title>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@tailwindcss" />
-        <meta name="twitter:creator" content="@tailwindcss" />
-        <meta name="twitter:title" content={`${meta.title} – Tailwind CSS`} />
-        <meta name="twitter:description" content={meta.description} />
-        <meta name="twitter:image" content={`https://blog.tailwindcss.com${meta.image}`} />
-        <meta property="og:url" content={`https://blog.tailwindcss.com${router.pathname}`} />
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={`${meta.title} – Tailwind CSS`} />
-        <meta property="og:description" content={meta.description} />
-        <meta property="og:image" content={`https://blog.tailwindcss.com${meta.image}`} />
+        <title>{meta.title} – 臧腾飞的博客</title>
         <meta name="description" content={meta.description}></meta>
       </Head>
       <header className="pt-6 xl:pb-10">
@@ -45,7 +34,7 @@ export default function Post({ meta, children, posts }) {
             <div>
               <dt className="sr-only">Published on</dt>
               <dd className="text-base leading-6 font-medium text-gray-500">
-                <time dateTime={meta.date}>{postDateTemplate.render(new Date(meta.date))}</time>
+                <time dateTime={meta.date}>{postDateTemplate(new Date(meta.date))}</time>
               </dd>
             </div>
           </dl>
@@ -68,15 +57,6 @@ export default function Post({ meta, children, posts }) {
                   <dl className="text-sm font-medium leading-5 whitespace-no-wrap">
                     <dt className="sr-only">Name</dt>
                     <dd className="text-gray-900">{author.name}</dd>
-                    <dt className="sr-only">Twitter</dt>
-                    <dd>
-                      <a
-                        href={`https://twitter.com/${author.twitter}`}
-                        className="text-teal-500 hover:text-teal-600"
-                      >
-                        {author.twitter}
-                      </a>
-                    </dd>
                   </dl>
                 </li>
               ))}
@@ -94,7 +74,7 @@ export default function Post({ meta, children, posts }) {
             <div className="pt-6 pb-16">
               <p>
                 Want to talk about this post?{' '}
-                <a href={meta.discussion} className="font-medium text-teal-500 hover:text-teal-600">
+                <a href={meta.discussion} className="font-medium text-red-500 hover:text-red-600">
                   Discuss this on GitHub &rarr;
                 </a>
               </p>
@@ -106,8 +86,8 @@ export default function Post({ meta, children, posts }) {
             <div className="space-y-8 py-8">
               {next && (
                 <div>
-                  <h2 className="text-xs tracking-wide uppercase text-gray-500">Next Article</h2>
-                  <div className="text-teal-500 hover:text-teal-600">
+                  <h2 className="text-xs tracking-wide uppercase text-gray-500">下一篇</h2>
+                  <div className="text-red-500 hover:text-red-600">
                     <Link href={next.link}>
                       <a>{next.title}</a>
                     </Link>
@@ -117,9 +97,9 @@ export default function Post({ meta, children, posts }) {
               {previous && (
                 <div>
                   <h2 className="text-xs tracking-wide uppercase text-gray-500">
-                    Previous Article
+                    前一篇
                   </h2>
-                  <div className="text-teal-500 hover:text-teal-600">
+                  <div className="text-red-500 hover:text-red-600">
                     <Link href={previous.link}>
                       <a>{previous.title}</a>
                     </Link>
@@ -130,7 +110,7 @@ export default function Post({ meta, children, posts }) {
           )}
           <div className="pt-8">
             <Link href="/">
-              <a className="text-teal-500 hover:text-teal-600">&larr; Back to the blog</a>
+              <a className="text-red-500 hover:text-red-600">&larr; 返回首页</a>
             </Link>
           </div>
         </footer>

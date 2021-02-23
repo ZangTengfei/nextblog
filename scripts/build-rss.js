@@ -9,7 +9,7 @@ import { getAllPosts } from '../src/getAllPostPreviews'
 const siteUrl = 'https://blog.tailwindcss.com'
 
 const feed = new Feed({
-  title: 'Tailwind CSS Blog',
+  title: '臧腾飞的博客',
   description: 'All the latest Tailwind CSS news, straight from the team.',
   id: siteUrl,
   link: siteUrl,

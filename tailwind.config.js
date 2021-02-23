@@ -36,9 +36,9 @@ module.exports = {
         '13': '3.25rem',
         '14': '3.5rem',
       },
-      fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-      },
+      // fontFamily: {
+      //   sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+      // },
       colors: {
         code: {
           green: '#b5f4a5',
@@ -48,6 +48,12 @@ module.exports = {
           blue: '#93ddfd',
           white: '#fff',
         },
+      },
+      boxShadow: {
+        'mymd': '0px 7px 8px 0px rgb(0 0 0 / 30%)'
+      },
+      backgroundImage: {
+        'mybgi': "url('https://mmbiz.qpic.cn/mmbiz_png/E6FwVF0oicdR2DefnHuCaf6CDefdcpNurvQ2rAHeS66E62MYWFR2ZE8LkWDS1KfLTWh7I9leFCgKNibgrstkNHjw/640?wx_fmt=png')",
       },
       typography: (theme) => ({
         default: {
@@ -70,7 +76,17 @@ module.exports = {
               backgroundColor: theme('colors.gray.400'),
             },
             code: {
-              color: theme('colors.gray.900'),
+              color: theme('colors.blue.500'),
+              backgroundColor: theme('colors.gray.100'),
+              fontWeight: '600',
+              borderRadius: theme('borderRadius.sm'),
+              padding: theme('padding.1')
+            },
+            'code::before': {
+              content: " "
+            },
+            'code::after': {
+              content: " "
             },
             a: {
               color: theme('colors.gray.900'),
@@ -78,6 +94,14 @@ module.exports = {
             pre: {
               color: theme('colors.gray.200'),
               backgroundColor: theme('colors.gray.800'),
+              backgroundImage: theme('backgroundImage.mybgi'),
+              boxShadow: theme('boxShadow.mymd'),
+              borderRadius: theme('borderRadius.md'),
+              backgroundPosition: '10px 10px',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '45px 13px',
+              paddingTop: theme('padding.10'),
+              paddingBottom: theme('padding.4')
             },
             blockquote: {
               color: theme('colors.gray.900'),
@@ -94,26 +118,26 @@ module.exports = {
     require('@tailwindcss/typography'),
     function ({ addBase, addComponents, theme }) {
       addBase([
-        {
-          '@font-face': {
-            fontFamily: 'Inter var',
-            fontWeight: '100 900',
-            fontStyle: 'normal',
-            fontNamedInstance: 'Regular',
-            fontDisplay: 'swap',
-            src: 'url("/fonts/Inter-roman.var-latin.woff2?3.13") format("woff2")',
-          },
-        },
-        {
-          '@font-face': {
-            fontFamily: 'Inter var',
-            fontWeight: '100 900',
-            fontStyle: 'italic',
-            fontNamedInstance: 'Italic',
-            fontDisplay: 'swap',
-            src: 'url("/fonts/Inter-italic.var-latin.woff2?3.13") format("woff2")',
-          },
-        },
+        // {
+        //   '@font-face': {
+        //     fontFamily: 'Inter var',
+        //     fontWeight: '100 900',
+        //     fontStyle: 'normal',
+        //     fontNamedInstance: 'Regular',
+        //     fontDisplay: 'swap',
+        //     src: 'url("/fonts/Inter-roman.var-latin.woff2?3.13") format("woff2")',
+        //   },
+        // },
+        // {
+        //   '@font-face': {
+        //     fontFamily: 'Inter var',
+        //     fontWeight: '100 900',
+        //     fontStyle: 'italic',
+        //     fontNamedInstance: 'Italic',
+        //     fontDisplay: 'swap',
+        //     src: 'url("/fonts/Inter-italic.var-latin.woff2?3.13") format("woff2")',
+        //   },
+        // },
       ])
     },
   ],

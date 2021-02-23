@@ -1,8 +1,15 @@
+import zangtengfeiAvatar from './img/zangtengfei.png'
 import adamwathanAvatar from './img/adamwathan.jpg'
 import bradlcAvatar from './img/bradlc.jpg'
 import steveschogerAvatar from './img/steveschoger.jpg'
 import robinmalfaitAvatar from './img/robinmalfait.jpg'
 import simonswissAvatar from './img/simonswiss.jpg'
+
+export const zangtengfei = {
+  name: '臧腾飞',
+  twitter: '@zangtengfei',
+  avatar: zangtengfeiAvatar,
+}
 
 export const adamwathan = {
   name: 'Adam Wathan',
