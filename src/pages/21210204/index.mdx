@@ -55,68 +55,6 @@ diskutil eject /dev/disk2
 ```
 因为取消挂载了，所以无法通过访达去弹出，通过上面的命令弹出。
 
-```jsx
-import dayjs from 'dayjs'
-import Link from 'next/link'
-import Head from 'next/head'
-import getAllPostPreviews from '@/getAllPostPreviews'
-
-const posts = getAllPostPreviews()
-
-const postDateTemplate = (t) => dayjs(t).format('YYYY-MM-DD')
-
-export default function Home() {
-  return (
-    <div className="divide-y divide-gray-200">
-      <Head>
-        <title>臧腾飞的博客</title>
-        <meta name="description" content="热爱生活" />
-      </Head>
-
-      <ul className="divide-y divide-gray-200">
-        {posts.map(({ link, module: { default: Component, meta } }) => {
-          return (
-            <li key={link} className="py-12">
-              <article className="space-y-2 xl:grid xl:grid-cols-4 xl:space-y-0 xl:items-baseline">
-                <dl>
-                  <dt className="sr-only">Published on</dt>
-                  <dd className="text-base leading-6 font-medium text-gray-500">
-                    <time dateTime={meta.date}>{postDateTemplate(new Date(meta.date))}</time>
-                  </dd>
-                </dl>
-                <div className="space-y-5 xl:col-span-3">
-                  <div className="space-y-6">
-                    <h2 className="text-2xl leading-8 font-bold tracking-tight">
-                      <Link href={link}>
-                        <a className="text-gray-900">{meta.title}</a>
-                      </Link>
-                    </h2>
-                    <div className="prose max-w-none text-gray-500">
-                      <Component />
-                    </div>
-                  </div>
-                  <div className="text-base leading-6 font-medium">
-                    <Link href={link}>
-                      <a
-                        className="text-red-500 hover:text-red-600"
-                        aria-label={`Read "${meta.title}"`}
-                      >
-                        阅读全文 &rarr;
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
-  )
-}
-
-```
-
 ## 基础设置
 ### 启动 N1
 在不插网线的情况下，把烧录好的优盘插到靠近 N1 电源的 USB 口，上电启动。不出意外大约一分钟后能搜到一个名为 **openWrt** 的 WiFi 信号，连上它。

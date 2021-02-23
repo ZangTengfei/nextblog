@@ -53,7 +53,7 @@ module.exports = {
         'mymd': '0px 7px 8px 0px rgb(0 0 0 / 30%)'
       },
       backgroundImage: {
-        'mybgi': "url('https://mmbiz.qpic.cn/mmbiz_png/E6FwVF0oicdR2DefnHuCaf6CDefdcpNurvQ2rAHeS66E62MYWFR2ZE8LkWDS1KfLTWh7I9leFCgKNibgrstkNHjw/640?wx_fmt=png')",
+        'mybgi': "url('/control.png')",
       },
       typography: (theme) => ({
         default: {
