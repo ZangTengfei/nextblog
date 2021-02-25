@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Install Node.js
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v2
+    - name: Setup Node
+    - uses: actions/setup-node@v2
       with:
-        node-version: '14.x'
+        node-version: '14'
     - name: Install npm dependencies
       run: npm install
     - name: Run build task
@@ -23,9 +23,10 @@ jobs:
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@v2.1.5
       env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-rltgoDzvO --delete'"
-          SOURCE: out/
-          REMOTE_HOST: '8.131.94.61'
-          REMOTE_USER: root
-          TARGET: /www/wwwroot/zangtengfei.com
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: '-rltgoDzvO --delete'
+        SOURCE: out/
+        REMOTE_HOST: '8.131.94.61'
+        REMOTE_USER: root
+        TARGET: '/www/wwwroot/zangtengfei.com'
+
