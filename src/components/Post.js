@@ -50,6 +50,7 @@ export default function Post({ meta, children, posts }) {
         {
           meta.tags && meta.tags.length &&
           <div className='flex justify-center m-6'>
+            <div className='bg-red-400 bg-green-400 bg-gray-400 bg-yellow-400 bg-blue-400 bg-indigo-400 bg-purple-400 bg-pink-400'></div>
             {
               meta.tags.map(tag => {
                 return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold mr-4`}>{tag.text}</span>
