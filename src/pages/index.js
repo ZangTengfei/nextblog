@@ -27,13 +27,23 @@ export default function Home() {
                   </dd>
                 </dl>
                 <div className="space-y-5 xl:col-span-3">
-                  <div className="space-y-6">
+                  <div className="">
                     <h2 className="text-2xl leading-8 font-bold tracking-tight">
                       <Link href={link}>
                         <a className="text-gray-900">{meta.title}</a>
                       </Link>
                     </h2>
-                    <div className="prose max-w-none text-gray-500">
+                    {
+                      meta.tags && meta.tags.length &&
+                      <div className='mt-1'>
+                        {
+                          meta.tags.map(tag => {
+                            return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold mr-4`}>{tag.text}</span>
+                          })
+                        }
+                      </div>
+                    }
+                    <div className="prose max-w-none text-gray-500 mt-6">
                       <Component />
                     </div>
                   </div>

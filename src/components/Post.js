@@ -47,22 +47,16 @@ export default function Post({ meta, children, posts }) {
         className="divide-y xl:divide-y-0 divide-gray-200 xl:grid xl:grid-cols-4 xl:col-gap-6 pb-16 xl:pb-20"
         style={{ gridTemplateRows: 'auto 1fr' }}
       >
-        <dl className="pt-6 pb-10 xl:pt-11 xl:border-b xl:border-gray-200">
-          <dt className="sr-only">Authors</dt>
-          <dd>
-            <ul className="flex justify-center xl:block space-x-8 sm:space-x-12 xl:space-x-0 xl:space-y-8">
-              {meta.authors.map((author) => (
-                <li key={author.twitter} className="flex items-center space-x-2">
-                  <img src={author.avatar} alt="" className="w-10 h-10 rounded-full" />
-                  <dl className="text-sm font-medium leading-5 whitespace-no-wrap">
-                    <dt className="sr-only">Name</dt>
-                    <dd className="text-gray-900">{author.name}</dd>
-                  </dl>
-                </li>
-              ))}
-            </ul>
-          </dd>
-        </dl>
+        {
+          meta.tags && meta.tags.length &&
+          <div className='flex justify-center m-6'>
+            {
+              meta.tags.map(tag => {
+                return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold mr-4`}>{tag.text}</span>
+              })
+            }
+          </div>
+        }
         <div className="divide-y divide-gray-200 xl:pb-0 xl:col-span-3 xl:row-span-2">
           <div className="prose max-w-none pt-10 pb-8">
             <MDXProvider components={mdxComponents}>{children}</MDXProvider>

@@ -44,10 +44,6 @@ getAllPosts().forEach(({ link, module: { meta, default: Content } }) => {
     link,
     description: meta.description,
     content: html + postText,
-    author: meta.authors.map(({ name, twitter }) => ({
-      name,
-      link: `https://twitter.com/${twitter}`,
-    })),
     date: new Date(meta.date),
     image: siteUrl + meta.image,
     ...(meta.discussion
