@@ -35,10 +35,10 @@ export default function Home() {
                     </h2>
                     {
                       meta.tags && meta.tags.length &&
-                      <div className='mt-1'>
+                      <div className='mt-1 space-x-4'>
                         {
                           meta.tags.map(tag => {
-                            return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold mr-4`}>{tag.text}</span>
+                            return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold`}>{tag.text}</span>
                           })
                         }
                       </div>

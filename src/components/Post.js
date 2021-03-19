@@ -29,7 +29,7 @@ export default function Post({ meta, children, posts }) {
         <meta name="description" content={meta.description}></meta>
       </Head>
       <header className="pt-6 xl:pb-10">
-        <div className="space-y-1 text-center">
+        <div className="text-center">
           <dl className="space-y-10">
             <div>
               <dt className="sr-only">Published on</dt>
@@ -38,26 +38,26 @@ export default function Post({ meta, children, posts }) {
               </dd>
             </div>
           </dl>
-          <div>
+          <div className='mt-1'>
             <PageTitle>{meta.title}</PageTitle>
           </div>
+          <div className='bg-red-400 bg-green-400 bg-gray-400 bg-yellow-400 bg-blue-400 bg-indigo-400 bg-purple-400 bg-pink-400'></div>
+          {
+            meta.tags && meta.tags.length &&
+            <div className='m-6 space-x-4'>
+              {
+                meta.tags.map(tag => {
+                  return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold`}>{tag.text}</span>
+                })
+              }
+            </div>
+          }
         </div>
       </header>
       <div
         className="divide-y xl:divide-y-0 divide-gray-200 xl:grid xl:grid-cols-4 xl:col-gap-6 pb-16 xl:pb-20"
         style={{ gridTemplateRows: 'auto 1fr' }}
       >
-        {
-          meta.tags && meta.tags.length &&
-          <div className='flex justify-center m-6'>
-            <div className='bg-red-400 bg-green-400 bg-gray-400 bg-yellow-400 bg-blue-400 bg-indigo-400 bg-purple-400 bg-pink-400'></div>
-            {
-              meta.tags.map(tag => {
-                return <span key={tag.text} className={`bg-${tag.color}-400 rounded-full p-0.5 px-2 text-xs text-white font-bold mr-4`}>{tag.text}</span>
-              })
-            }
-          </div>
-        }
         <div className="divide-y divide-gray-200 xl:pb-0 xl:col-span-3 xl:row-span-2">
           <div className="prose max-w-none pt-10 pb-8">
             <MDXProvider components={mdxComponents}>{children}</MDXProvider>
