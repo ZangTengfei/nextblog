@@ -1,0 +1,107 @@
+import { engineering, shell } from '@/tags'
+
+export const meta = {
+  title: 'npm scripts 技巧',
+  description: `npm 是前端同学每天都在用的命令，这里主要介绍 npm scripts 中的一些技巧和 Tips，以及相关的高级使用方式。`,
+  date: '2021-03-23T12:55:18.391Z',
+  tags: [engineering, shell]
+}
+
+<!--excerpt-->
+
+npm 是前端同学每天都在用的命令，这里主要介绍 npm scripts 中的一些技巧和 Tips，以及相关的高级使用方式。
+
+<!--/excerpt-->
+
+npm 是前端同学每天都在用的命令，这里主要介绍 npm scripts 中的一些技巧和 Tips，以及相关的高级使用方式。
+## 常用命令
+
+- npm init 初始化工程
+- npm run  运行脚本
+- npm install  安装依赖
+- npm update  升级依赖
+- npm bin  查看bin文件目录
+- npm link 将工程软连接到全局
+- npm publish  发布包
+- npm deprecate  废弃包
+- ...
+
+## npm scripts
+
+我们可以用 npm run xxx 去运行一个提前定义好的脚本指令：
+
+```json
+"scripts": {
+  "start": "node scripts/start.js",
+  "build": "node scripts/build.js",
+  "test": "node scripts/test.js"
+}
+```
+
+```shell
+npm run build
+npm run start
+```
+### 内部变量
+
+>问题：如何输出当前的package所在包名和版本？
+>答案：使用 `$npm_package_*` 命令
+
+```shell
+$npm_package_name           # name in package.json
+$npm_package_version        # version in package.json
+$npm_package_config_var1    # config.var1 in package.json
+```
+### 参数传递
+
+>问题：如何对 npm scripts 二次包装过的命令传参
+>答案：利用 -- 透传参数
+
+```shell
+{
+  "scripts": {
+    "serve": "serve ./build",
+    "serve:prod": "npm run serve -- -l 80"
+  }
+}
+```
+### 脚本钩子
+脚本钩子类似于 hook，当事件触发时，对应的钩子逻辑也被触发。如 git hook，web hook 等···
+
+部分 npm 内置脚本钩子如下：
+- preinstall        # 用户执行 npm install 命令时，先执行该脚本
+- postinstall       # 用户执行 npm install 命令时，安装结束后执行该脚本
+- preuninstall      # 卸载一个模块前执行
+- postuninstall     # 卸载一个模块后执行
+- prelink           # link 模块前执行
+- postlink          # link 模块后执行
+- pretest           # 运行 npm test 命令前执行
+- posttest          # 运行 npm test 命令后执行
+
+规律：通过 pre-* 和 post-* 分别定义前置和后置钩子
+
+除了内置脚本钩子，也可以按照规则自定义地添加钩子
+
+#### 例子：自动化发版
+
+读取版本信息，通过 semver 增加版本号
+
+```js
+#!/usr/bin/env node
+
+const semver = require('semver')
+const packageInfo = require('../package.json')
+const fs = require('fs)
+const targetVersion = semver.inc(packageInfo.version);
+packageInfo.version = targetVersion;
+
+···
+```
+
+#### 思考
+- 脚本第一行为什么要有 `#!/usr/bin/env node`？
+- 如果想在一条 script 里顺序执行两条命令，应该怎么写？
+- 如果想在一条 script 里并行执行两条命令，应该怎么写？
+
+#### 拓展：semver
+一个语义化的版本控制模块，可以实现版本号的分析与比较。
