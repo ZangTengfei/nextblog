@@ -1,0 +1,193 @@
+import { engineering, shell } from '@/tags'
+
+export const meta = {
+  title: 'Bash 简介和快速入门',
+  description: `虽然前端同学不常用到 Bash 命令，但是日常工作中也可以利用 Bash 自动化地处理一些繁琐需求，另外了解一些 Bash 编程也可以帮助我们更好地理解前端 CLI 脚手架的实现。`,
+  date: '2021-03-25T11:03:18.391Z',
+  tags: [engineering, shell]
+}
+
+<!--excerpt-->
+
+虽然前端同学不常用到 Bash 命令，但是日常工作中也可以利用 Bash 自动化地处理一些繁琐需求，另外了解一些 Bash 编程也可以帮助我们更好地理解前端 CLI 脚手架的实现。
+
+<!--/excerpt-->
+
+虽然前端同学不常用到 Bash 命令，但是日常工作中也可以利用 Bash 自动化地处理一些繁琐需求，另外了解一些 Bash 编程也可以帮助我们更好地理解前端 CLI 脚手架的实现。
+
+## Shell 是什么
+
+Shell 是操作系统和用户交互的 “接口”，一般指 Unix Shell，可以认为是 CLI（command-line interface）命令行接口。
+
+### 命令(Command)是什么
+1. 命令的本质是一个程序
+2. 这些程序具有发起系统调用(System Call)的能力
+3. 编写 Shell 脚本，其实是在编排这些程序的执行
+4. 除此之外，还有 Shell 语法解释器负责解释一行行的 Shell 语句
+
+#### 例：ls 命令的实现
+以下是常用的 ls 命令程序源码
+```C
+// src/bin/ls/ls.c
+#include <sys/cdefs.h>
+...
+int
+ls_main(int argc, char *argv[])
+{
+    static char dot[] = ".", *dotav[] = { dot, NULL };
+    struct winsize win;
+    int ch, fts_options;
+    int kflag = 0;
+    const char *p;
+    setprogname(argv[0]);
+    (void)setlocale(LC_ALL, "");
+    
+    ...
+```
+
+#### 常用 Shell 解释器
+- Linux / Unix
+  - bash
+  - sh
+  - zsh
+- Windows
+  - cmd
+  - PowerShell
+  - WSL
+
+其中 Bash / GNU Bash，是最广泛使用的 Shell 解释器
+
+## 常见的 Bash 命令
+这里罗列一下平时经常使用的 Bash 命令，相信你也非常熟悉。
+
+```shell
+cd ./xxx
+ls -al
+rm -rf ./*.log
+mkdir react-demo
+ps -aux
+kill 8080
+...
+```
+
+如果按照功能分类，那么常用的 Bash 命令大概有以下几类：
+### 文件新建
+- **touch** 新建文件
+
+```shell
+touch ./index.js
+```
+- **mkdir** 新建目录
+```shell
+mkdir ./a-new-project
+```
+
+### 文件删除
+- **rmdir**  删除目录
+```shell
+rmdir ./a-new-project
+```
+
+- **rm** 删除文件或目录
+```shell
+rm ./a-single-file
+rm -r ./a-dir # 递归删除
+rm -rf ./a-dir-with-files # 递归强制删除
+```
+
+### 文件移动
+- **mv** 文件移动
+```shell
+mv ./source/a.txt ./target
+mv -f ./source/a.txt ./target # 移动并强制覆盖
+mv -n ./source/a.txt ./target # 移动并不覆盖
+```
+
+文件移动也可以对文件进行重命名，例如将 a.txt 改为 b.txt
+
+- **mv** 文件重命名
+```shell
+mv ./source/a.txt ./cource/b.txt
+```
+
+- **cp** 文件复制
+```shell
+cp ./source/a.txt ./target/
+cp -R ./source/ ./target/ # 递归复制（复制目录）
+```
+
+### 文件查看
+- **cat，head，tail**
+```shell
+cat ./package.json # 查看文件
+head -n 10 ~/.logs/service-a.log  # 查看文件的前十行
+tail -n 10 ~/.logs/service-a.log  # 查看文件的后十行
+```
+head，tail 一般用来查看日志文件，如日志最初的状态和当前的状态
+
+### 文件编辑
+- **nano**
+GNU nano 是 Linux 上最简单的文本编辑器，操作简单，功能比较初级。对于一些临时和简单的文件编辑操作，我们可以直接使用 nano 就好。
+- **vi / vim**
+vi 是 Linux 上的一款功能强大的编辑器，vim 更是 vi 的加强版。vim 和 emacs 都是 cli 世界中的编辑器王者，如果想了解可以查看这篇文章：精通VIM，此文就够了
+### 进程相关
+- **ps** 进程
+```shell
+ps # 查看当前用户进程
+ps -ax # 查看所有进程
+```
+
+- **lsof**
+```shell
+lsof -i # 查看打开的网络相关文件
+lsof -p 2333 # 查看pid=2333的进程打开的文件
+Linux 中一切皆文件，因此 lsof 命令非常强大，可以使用 man 查看一下命令的文档。
+```
+
+### 其他
+- **top**
+```shell
+top
+Processes: 810 total, 2 running, 808 sleeping, 4290 threads                                     17:59:18
+Load Avg: 3.40, 2.91, 2.77  CPU usage: 6.2% user, 5.91% sys, 88.5% idle
+SharedLibs: 411M resident, 50M data, 169M linkedit.
+MemRegions: 322913 total, 4672M resident, 170M private, 3342M shared.
+PhysMem: 16G used (3216M wired), 42M unused.
+VM: 5230G vsize, 2305M framework vsize, 64085451(382) swapins, 68597315(0) swapouts.
+Networks: packets: 141128618/95G in, 279162710/158G out.
+Disks: 42933450/859G read, 28110644/584G written.
+PID    COMMAND      %CPU TIME     #TH   #WQ  #PORTS  MEM    PURG   CMPRS  PGRP  PPID  STATE
+437    WindowServer 17.8 32:07:52 14    5    6679-   1425M  1408K+ 197M   437   1     sleeping
+2002   Terminal     12.4 12:31.83 13    7    712-    94M-   1472K+ 39M-   2002  1     sleeping
+98508  top          10.0 00:03.97 1/1   0    26      8940K  0B     0B     98508 98272 running
+0      kernel_task  5.9  15:39:03 347/8 0    0       51M-   0B     0B     0     0     running
+40396  Google Chrom 4.3  68:08.14 27    1    237     312M   0B     35M    40355 40355 sleeping
+...
+```
+
+- **kill**
+```shell
+kill 45934 # SIGTERM 信号
+kill -9 45934 # SIGKILL 信号，强杀进程
+```
+kill 命令实际上并不是在 “kill”，本质上是向进程发送信号。例如：kill -s SIGUSR1 34534 实际上可以调试 Node.js 应用，因为 Node.js 会在收到 SIGUSR1 是进入调试模式。
+“优雅退出”的原理就是监听 SIGUSR1 信号，并递归地退出子进程。
+
+- **grep**
+```shell
+lsof -i | grep LISTEN # 找到所有正在被监听的端口
+```
+可以用这个方法找到正在占用某端口的进程。
+- **awk**
+```shell
+# awk '{pattern + action}' {filenames}
+docker rm $(docker ps -a | awk 'NR>1 {print $1}') # 删除所有的docker容器
+chmod +x $(ls -al | awk 'NR>1 {print $9}') # 为当前目录下的所有文件添加可执行权限
+```
+
+如果 grep 是对行的筛选，那么 awk 就是对列的筛选，awk 语法非常复杂，功能也极其强大。
+命令的用法并不重要，知道如何找到命令即可，找不到时可以借助搜索引擎。
+如果需要获得更详细的命令文档，可以使用 -h 参数。
+如果需要获得最详细的命令文档，就是用 man 方法。比如 ps 命令，它有很多参数，我们可以直接输入 man ps 查看官方完整文档。
+
+## Bash 编程基础
