@@ -1,0 +1,94 @@
+import { engineering, note } from '@/tags'
+
+export const meta = {
+  title: 'Github Action 让前端 CI/CD 如此简单',
+  description: `前端同学在使用 Jenkins、Travis-CI 这两个流行的 CI/CD 工具进行持续集成和部署的时候或多或少地都会遇到一些障碍，最大的障碍莫过于和服务器的同步。Github Action 的出现大大降低了前端同学使用此类工具的门槛。`,
+  date: '2021-04-08T08:00:00.000Z',
+  tags: [engineering, note]
+}
+
+<!--excerpt-->
+
+前端同学在使用 Jenkins、Travis-CI 这两个流行的 CI/CD 工具进行持续集成和部署的时候或多或少地都会遇到一些障碍，最大的障碍莫过于和服务器的同步。Github Action 的出现大大降低了前端同学使用此类工具的门槛。
+
+<!--/excerpt-->
+
+## CI / CD 是什么
+> 在软件工程中，CI/CD或CICD通常指的是持续集成和持续交付或持续部署的组合实践。CI/CD通过在应用程序的构建、测试和部署中实施自动化，在开发和运营团队之间架起了桥梁。现代DevOps实践涉及软件应用程序在整个开发生命周期内的持续开发、持续测试、持续集成、持续部署和持续监控。CI/CD实践或CI/CD管道（CI/CD pipeline）构成了现代DevOps业务的主干。
+
+维基百科上的这个定义有点啰嗦，CI / CD 说白了就是提交代码之后自动打包，部署。部署在测试服务器就是自动化测试，部署在生产服务器就是持续交付···哈哈哈
+
+在 Github Action 出来（18年10月）之前，前端同学一般都是使用 Jenkins、Travis-CI 这两个流行的 CI/CD 工具进行持续集成和部署。这两款工具我都使用过，具体到我的使用场景中，他们都有一些比较麻烦的地方。
+
+首先说 Jenkins，必须单独部署到自己的服务器，并且前端打包需要耗费一定的性能，所以服务器的配置不可以太差，否则一次打包过程可能需要很久，严重的直接宕机。
+
+相比而言 Travis-CI 就要好多了，它不需要部署，登录就能用。但是在我需要把打包后的代码部署到阿里云之类的服务器时，就需要额外安装插件，略微繁琐。
+
+Github Action 更进一步，在仓库里可以直接配置使用，只需要编写对应的配置文件即可，非常轻量。
+
+## 前端项目部署配置
+
+我们在 Github 仓库的 Action 标签中创建新的 workflow。
+下面是我们使用的 workflow 模板：
+
+```yaml
+name: Build app and deploy to aliyun
+on:
+  push:
+    branches:
+      - master // 修改成想要监控的代码分支
+jobs:
+  build:
+    runs-on: ubuntu-latest // 运行环境，根据项目选择，一般使用ubuntu即可
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node // 设置node环境
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14' 
+    - name: Install npm dependencies // 执行npm脚本
+      run: npm install
+    - name: Run build task
+      run: npm run build
+    - name: Deploy to Server // 部署到服务器
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }} // 服务器私钥
+        ARGS: "-rltgoDzvO --delete" // 同步配置
+        SOURCE: "dist/" // 打包目录
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }} // 服务器地址
+        REMOTE_USER: ${{ secrets.REMOTE_USER }} // 服务器用户
+        TARGET: ${{ secrets.REMOTE_TARGET }} // 同步目录
+```
+
+### 设置环境变量
+
+配置文件中需要添加很多私密参数，比如秘钥，服务器地址等等，我们当然不能直接明文写上去。Github 为我们提供了一个设置加密环境变量的方法，只需要在仓库的 Setting > Secret 目录下添加即可。
+
+### 同步命令
+
+注意 ARGS 参数，填写的是 rsync 命令
+
+`-rltgoDzvO --delete` 的意思是同步时删除远程代码，和 `-avz --delete` 效果一样。
+
+如果同步代码时服务器有部分文件或文件夹不想被删除，可以使用 exclude 参数，排除文件或文件夹
+
+例如排除 `dir` 文件夹的命令，`-avz --delete --exclude 'dir'`
+
+### 修改权限
+
+这里有一个问题，文件同步后权限会被修改为 docker，此时可以增加如下配置，修改权限为特定用户：
+
+```yaml
+- name: ssh pipelines
+  uses: cross-the-world/ssh-pipeline@master
+  env:
+    WELCOME: "ssh pipeline"
+  with:
+    host: ${{ secrets.REMOTE_HOST }}
+    user: ${{ secrets.REMOTE_USER }}
+    key: ${{ secrets.SERVER_SSH_KEY }}
+    connect_timeout: 10s
+    script: 
+      chown -R lin.lin ${{ secrets.REMOTE_TARGET }}
+```

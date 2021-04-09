@@ -17,3 +17,8 @@ export const shell = {
   color: 'blue',
   text: 'shell'
 }
+
+export const note = {
+  color: 'gray',
+  text: '笔记'
+}
